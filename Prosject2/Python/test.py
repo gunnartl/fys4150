@@ -46,22 +46,23 @@ print(A)
 #print(np.sort(w)[0]/h**2)
 print(samurai_jacobi(A,1e-6)[0])
 
-"""
+
 N     = np.array(range(10,110,10))
 count = []
 err   = []
 for i in N:
     print(i)
-    h = 1/(i)
+    h2 = 1./(i**2)
     diagonals = [np.ones(i)*(2), np.ones(i-1)*(-1), np.ones(i-1)*(-1)]
     A = diags(diagonals, [0, -1, 1]).toarray()
     M, tell = samurai_jacobi(A,1e-6)
-    w, v = np.linalg.eig(A*h**2)
-    err.append(max(abs(np.sort(w))-abs(np.sort(np.diag(M))*h**2)))
+    w, v = np.linalg.eig(A/h2)
+    err.append(max(abs(np.sort(w)-np.sort(np.diag(M))/h2)))
     count.append(tell)
-print(np.sort(w)-np.sort(np.diag(M)*h**2))
+print(2/h2-(2/h2)*np.cos(np.pi/(i+1)))
+print(np.sort(np.diag(M))/h2-np.sort(w))
 
-
+print(err)
 
     
 import numpy as np
@@ -84,4 +85,4 @@ plt.yscale("log")
 ax2.tick_params(axis='y', labelcolor=color)
 
 fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.show()"""
+plt.show()
