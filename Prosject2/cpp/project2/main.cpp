@@ -13,19 +13,22 @@ mat samurai_jacobi(double *A, double tol, int& output);
 mat toeplitz(int N);
 void check(int Nstart,int Nstop, float tol);
 void potpot(int N);
+void two_electrons(int N, double omega);
 void test_toeplitz();
 void test_jacobi();
 
 int main(){
-    test_toeplitz();
-    test_jacobi();
+    //test_toeplitz();
+    //test_jacobi();
     //check(1,1,1e-6);
-    potpot(400);
+    potpot(200);
+    //two_electrons(300, 5.0);
     return 0;
 }
 
 mat samurai_jacobi(mat A, double tol, int& count){
-    //preforms jacobismethod to find eigenvalues
+    //performs jacobis method to find eigenvalues and eigenvector for an input matrix A
+    // terminates the algorithm when off diagonal elements are small enough according to input tolerance
     double hugest,tau,t,t2,s,c;
     int n,k,l;
     mat S;
@@ -43,7 +46,7 @@ mat samurai_jacobi(mat A, double tol, int& count){
             }
         }
     }
-    mat R = eye(n,n); // soon to bee eigenmatrix
+    mat R = eye(n,n); // soon to be eigenmatrix
     while(abs(A(k,l))>tol){
         tau = (A(l,l)-A(k,k))/(2*A(k,l));
         //cout<<count<<endl;
@@ -151,7 +154,8 @@ void check(int Nstart,int Nstop,float tol){
 }
 
 void potpot(int N){
-
+    // computes eigenvalues and eigenvectors for single electron problem
+    // compares results to the armadillo function eig_sym
     double rho_0,rho_max,h;
     vec eigval;
     mat eigvec;
@@ -166,8 +170,8 @@ void potpot(int N){
 
 
     mat A = toeplitz(N)/(h*h);
-    cout<<V<<endl;
-    A.diag() += V;
+    //cout<<V<<endl;
+    A.diag() += V;  // Problem matrix for single electron
     //cout<<A<<endl;
     int counter;
     mat jacobi_vals, jacobi_vecs;
@@ -176,9 +180,9 @@ void potpot(int N){
     jacobi_vecs.shed_cols(0,N-1);   //sheds the eigenvalues from the vectors
     jacobi_vals.shed_cols(N,N+N-1); //sheds the eigenvectors from thevalues
     jacobi_vals = jacobi_vals.diag();
-    cout<<jacobi_vals<<1234<<endl;
+    //cout<<jacobi_vals<<1234<<endl;
     uvec sortindex = sort_index(jacobi_vals);
-    eig_sym(eigval,eigvec,A);
+    eig_sym(eigval,eigvec,A);       // Armadillo implementaion of eigenvalue problem
     mat egenvector0,egenvector1,egenvector2;
     mat egenval0,egenval1,egenval2;
     egenvector0 = jacobi_vecs.col(sortindex(0));
@@ -197,12 +201,52 @@ void potpot(int N){
 
 }
 
+void two_electrons(int N, double omega){
+    // computes eigenvalues for two electron problem
+    double rho_0,rho_max,h;
+    vec eigval;
+    mat eigvec;
+    rho_0 = 0;
+    rho_max = 5;
+    vec V = zeros(N);//linspace(rho_0,rho_max,N);
+    h = (rho_max/N);
+    for(int i = 0;i<N;i++){
+        V[i] = omega*omega*((i+1)*h)*((i+1)*h) +1/((i+1)*h) ;
+    }
+    //vec V = rho%rho;
+
+
+    mat A = toeplitz(N)/(h*h);
+    //cout<<V<<endl;
+    A.diag() += V;  // Problem matrix for single electron
+    //cout<<A<<endl;
+    int counter;
+    mat jacobi_vals, jacobi_vecs;
+    jacobi_vals = samurai_jacobi(A,1e-6,counter); //matrix of eigenvalues and vectors contactenated
+    jacobi_vecs = jacobi_vals;
+    jacobi_vecs.shed_cols(0,N-1);   //sheds the eigenvalues from the vectors
+    jacobi_vals.shed_cols(N,N+N-1); //sheds the eigenvectors from thevalues
+    jacobi_vals = jacobi_vals.diag();
+    //cout<<jacobi_vals<<1234<<endl;
+    uvec sortindex = sort_index(jacobi_vals);
+    mat egenval0,egenval1,egenval2;
+    egenval0 = jacobi_vals(sortindex(0));
+    egenval1 = jacobi_vals(sortindex(1));
+    egenval2 = jacobi_vals(sortindex(2));
+    cout<<setprecision(17)<<egenval0<<endl<<egenval1<<endl<<egenval2<<endl;
+
+
+
+}
+
+
+
 void test_toeplitz(){
     // Unit test for the toeplitz function
-    // testing that toeplits returns Matrix A
+    // testing that toeplitz returns Matrix A
     // for N = 4
     mat A,B;
-    A= {{ 2,-1, 0, 0},
+    A = {{ 2,-1, 0, 0},
         {-1, 2,-1, 0},
         { 0,-1, 2,-1},
         { 0, 0,-1, 2}};
@@ -240,3 +284,4 @@ void test_jacobi(){
         }
     }
 }
+
