@@ -123,6 +123,7 @@ void check(int Nstart,int Nstop,float tol){
     mat start,approx,eigvec;
     double h2;
     for(int i = Nstart;i <=Nstop;i+=10){
+
         h2 = 1./(i*i);
         start = toeplitz(i);
         eig_sym(eigval,eigvec,toeplitz(i)/h2);
