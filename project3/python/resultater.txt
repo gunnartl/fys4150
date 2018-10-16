@@ -1,0 +1,25 @@
+verlet blir først ustabil ved rundt 5 punkter i året euler er ustabil i
+utgangspunktet.
+
+euler flops:4n + utregning av akselerasjon
+verletflops :9n + utregningav akselerasjon 
+
+analytisk unnslipningshastighet: 
+
+Solmasse = 1
+Jordmasse = Jordamasse/solmasse
+r målt i au
+v i au/år
+G = 4*pi^2
+
+sett Kinetisk energi = potensiell og løs for 
+	0.5mv^2      = G*M*m/r
+		v    = 8.8857658 AU/yr
+
+Funnet ved prøving og feiling
+
+ligger i intervallet [8.85185,8.886185 AU/yr]
+som må sies å stemme ganske bra. 
+
+grunnentil at jegikke har gort intervallet midre er at manmå simulere i 30000 år for 
+gjøre det mindre
