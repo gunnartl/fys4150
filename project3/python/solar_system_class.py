@@ -2,7 +2,7 @@ import numpy as np
 import time
 from numba import jit
 
-class planet:
+class body:
     def __init__(self,mass, pos0, vel0):
         self.mass = mass/2e30
         self.p0    = pos0
@@ -20,7 +20,22 @@ class planet:
     def angular_momentum(self,v,r):
         angmom = np.cross(r,v*self.mass,axis=1)
         return angmom
-        
+    
+
+def system(*args):
+    system = []
+    for i in args:
+        system.append(i)
+    
+    mass_centre = np.zeros(3)
+    for i in system:
+        mass_centre += i.mass*i.p0
+    
+    for i in system:
+        i.p0 = i.p0-mass_centre
+    
+    return system
+
 class solve:
     def __init__(self,planet,N,dt):
         self.dt = dt
@@ -80,7 +95,7 @@ if __name__ == "__main__":
     G = np.pi**2 * 4
 
         
-    Earth = planet(EarthM, np.array([1,0,0]),np.array([0,np.sqrt(G)+2.603,0]))
+    Earth = body(EarthM, np.array([1,0,0]),np.array([0,np.sqrt(G)+2.603,0]))
     
     print(np.sqrt((2/Earth.mass)*abs(Earth.potential_energy(np.array([Earth.p0])))))
     
