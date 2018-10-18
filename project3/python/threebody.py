@@ -20,7 +20,8 @@ v0_saturn    = np.array([5.206732001657008E-03,8.336898877431193E-04,-2.22084825
 
 mass_sun     = 2e30
 p0_sun       = np.array([0,0,0])
-v0_sun       = -(mass_earth*v0_earth+mass_jupiter*v0_jupiter)/mass_sun
+v0_sun       = -(mass_saturn*v0_saturn+mass_mercur*v0_mercur+mass_earth*v0_earth+mass_jupiter*v0_jupiter)/mass_sun
+
 
 earth   = mpc.body(mass_earth,p0_earth,v0_earth)
 jupiter = mpc.body(mass_jupiter,p0_jupiter,v0_jupiter)
@@ -30,10 +31,12 @@ saturn  = mpc.body(mass_saturn,p0_saturn,v0_saturn)
 
 system  = mpc.system(sun,mercur,earth,jupiter,saturn)
 
+#system   = mpc.system(sun,mercur)#,earth)
 
 
 
-forsøk  = mpc.solve(system,80000,1/3650)
+
+forsøk  = mpc.solve(system,4000,1/365)
 #print(system[1].pos_vec[0])
 forsøk.verlet()
 #print(system[0].pos_vec[1]+system[0].vel_vec[1]/365 + 0.5*system[0].acc_vec[1]/(356**2))

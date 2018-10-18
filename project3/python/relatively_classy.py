@@ -69,9 +69,10 @@ class solve:
 
         for j in self.system:
             if j != current:
-                r = np.linalg.norm(current.pos_vec[i]-j.pos_vec[i])
-                l = np.cross(r,current.vel_vec[i])
-                acc -= r*self.G*j.mass/(np.linalg.norm(r)**3)*(1+(3*l**2)/(r**2*9e16))
+                r_vec = current.pos_vec[i]-j.pos_vec[i]
+                r = np.linalg.norm(r_vec)
+                l = np.cross(r_vec,current.vel_vec[i-1])
+                acc -= r_vec*self.G*j.mass/(np.linalg.norm(r)**3)*(1+(3*l**2)/(r**2*9e16))
         return acc
 
     #@jit
