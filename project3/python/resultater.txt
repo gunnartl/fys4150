@@ -16,10 +16,13 @@ sett Kinetisk energi = potensiell og løs for
 	0.5mv^2      = G*M*m/r
 		v    = 8.8857658 AU/yr
 
-Funnet ved prøving og feiling
+Funnet ved prøving og feiling:
 
 ligger i intervallet [8.85185,8.886185 AU/yr]
 som må sies å stemme ganske bra. 
 
 grunnentil at jegikke har gort intervallet midre er at manmå simulere i 30000 år for 
 gjøre det mindre
+
+Unnslipningshastigheten blir lavere når man nermer seg tre i eksponenten. Dette er jo fordi graften blir mindre, i alle fall når man 
+er lengre unna. 

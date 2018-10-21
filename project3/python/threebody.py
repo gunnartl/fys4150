@@ -36,7 +36,7 @@ system  = mpc.system(sun,mercur,earth,jupiter,saturn)
 
 
 
-forsøk  = mpc.solve(system,4000,1/365)
+forsøk  = mpc.solve(system,1000,1/365)
 #print(system[1].pos_vec[0])
 forsøk.verlet()
 #print(system[0].pos_vec[1]+system[0].vel_vec[1]/365 + 0.5*system[0].acc_vec[1]/(356**2))
