@@ -1,46 +1,43 @@
 import numpy as np
 
-"""
-def s_d():
+def S_d(S,I):
+    return c*(N-S-I) - a*S*I/N
+
+def I_d(S,I):
+    return a*S*I/N -b*i
+
+def rk4(S, I, f):
+
+    k1 = f(S, I)
+    k2 = f(S + dt/2, I + (dt/2)*k1)
+    k3 = f(S + dt/2, I + (dt/2)*k2)
+    k4 = f(S + dt,   I + dt * k3)
     
 
+    return (dt/6)*(k1 + 2*k2 + 2*k3 + k4)
 
-def runge_kutta4(S, I, f):
+dt = 1
+a = 4 
+b = 1
+c = .5
 
-    k1 = f(t_n, y_n)
-    k2 = f(t_n + h/2, y_n + (h/2)*k1)
-    k3 = f(t_n + h/2, y_n + (h/2)*k2)
-    k4 = f(t_n + h,   y_n + h * k3)
+steps = 100
+
+N = 400
+
+S = np.zeros(400)
+I = np.zeros_like(S)
+
+S[0] = 300
+I[0] = 100
+
+for i in range(1,steps): 
+    S[i] = S[i] + rk4(S[i],I[i],S_d)
+    I[i] = I[i] + rk4(S[i],I[i],I_d)
     
-
-    return y_n + (h/6)*(k1 + 2*k2 + 2*k3 + k4)
-
-"""
-
-def runge_kutta4(y_n, t_n, h, f):
-    '''
-    Gir y_n+1 ved hjelp av Runge Kutta 4.
-    '''
-    # Konstanter
-    k1 = f(t_n, y_n)
-    k2 = f(t_n + h/2, y_n + (h/2)*k1)
-    k3 = f(t_n + h/2, y_n + (h/2)*k2)
-    k4 = f(t_n + h,   y_n + h * k3)
     
-    # Regn ut og returner neste verdi
-    return y_n + (h/6)*(k1 + 2*k2 + 2*k3 + k4)
+import matplotlib.pyplot as plt
 
-def f(t, y):
-    '''
-    Funksjon til den deriverte.
-    '''
-    return 0.5 * y
-    
-# Startverdi, skrittlengde, starttid og sluttid
-y_0, h, t_0, t_end = 1, 2, 0, 10 
-tider = [i for i in range(t_0, t_end+h, h)] # Liste for tiden
-y_verdier = [y_0]                           # Liste for y-verdier
-
-for i in range(0, len(tider)-1):
-    y_n, t_n = y_verdier[i], tider[i]               # Hent y og t
-    y_verdier.append(runge_kutta4(y_n, t_n, h, f))  # Regn ut neste verdi
+plt.plot(S)
+plt.plot(I)
+plt.show()
