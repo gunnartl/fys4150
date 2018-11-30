@@ -21,18 +21,18 @@ class SIR_simple:
         I[0] = self.I0
         
         for i in range(1,steps):
-    
+            
             sk1 = self.S_d(S[i-1], I[i-1])
             ik1 = self.I_d(S[i-1], I[i-1])
             
-            sk2 = self.S_d(S[i-1] + dt/2, I[i-1] + (dt/2)*sk1)
-            ik2 = self.I_d(S[i-1] + dt/2, I[i-1] + (dt/2)*ik1)
+            sk2 = self.S_d(S[i-1] + (dt/2)*sk1, I[i-1] + (dt/2)*ik1)
+            ik2 = self.I_d(S[i-1] + (dt/2)*sk1, I[i-1] + (dt/2)*ik1)
             
-            sk3 = self.S_d(S[i-1] + dt/2, I[i-1] + (dt/2)*sk2)
-            ik3 = self.I_d(S[i-1] + dt/2, I[i-1] + (dt/2)*ik2)
+            sk3 = self.S_d(S[i-1] + (dt/2)*sk2, I[i-1] + (dt/2)*ik2)
+            ik3 = self.I_d(S[i-1] + (dt/2)*sk2, I[i-1] + (dt/2)*ik2)
             
-            sk4 = self.S_d(S[i-1] + dt,   I[i-1] + dt * sk3)
-            ik4 = self.I_d(S[i-1] + dt,   I[i-1] + dt * ik3)    
+            sk4 = self.S_d(S[i-1] + dt*sk3,   I[i-1] + dt * ik3)
+            ik4 = self.I_d(S[i-1] + dt*sk3,   I[i-1] + dt * ik3)    
             
             S[i] = S[i-1] + (dt/6)*(sk1 + 2*sk2 + 2*sk3 + sk4)
             I[i] = I[i-1] + (dt/6)*(ik1 + 2*ik2 + 2*ik3 + ik4)
@@ -42,7 +42,7 @@ class SIR_simple:
 
 
 
-a = SIR_simple(400,300,100,4,1,0.5)
+test = SIR_simple(400,300,100,4,1,0.5)
 
 S, I = a.solve(1400,0.01)
    
@@ -50,4 +50,5 @@ import matplotlib.pyplot as plt
 
 plt.plot(S)
 plt.plot(I)
+plt.plot(S+I)
 #plt.show()

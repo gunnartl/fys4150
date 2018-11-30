@@ -54,16 +54,17 @@ if __name__ == "__main__":
     
     test = mc_SIR(400,300,100,4,1,0.5)
     start = time.time()
-    for i in range(1000):
+    mcs = 100
+    for i in range(mcs):
         S,I,R = test.propagate(steps) 
         sav += S
         iav += I
         rav += R
-        print(time.time()-start)
+    print(time.time()-start)
             
             
     import matplotlib.pyplot as plt 
-    plt.plot(sav/1000)
-    plt.plot(iav/1000)
-    plt.plot(rav/1000)
-    #plt.plot(S+I+R)
+    plt.plot(sav/mcs)
+    plt.plot(iav/mcs)
+    plt.plot(rav/mcs)
+    plt.plot(S+I+R)
