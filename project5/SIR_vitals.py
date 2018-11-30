@@ -23,20 +23,20 @@ dt  = .01
 a   = 4 
 b   = 1
 c   = .5
-d   = 0
-d_i = 0
-e   = 0
+d   = 0.01
+d_i = 0.1
+e   = 0.03
 
 steps = 1400
 
-N = 40000
+N = 400
 
 S = np.zeros(steps)
 I = np.zeros_like(S)
 R = np.zeros_like(S)
 
-S[0] = 30000
-I[0] = 10000
+S[0] = 300
+I[0] = 100
 R[0] = 0
 
 for i in range(1,steps):
