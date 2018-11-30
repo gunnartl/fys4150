@@ -71,11 +71,10 @@ class solve:
             if j != current:
                 r_vec = current.pos_vec[i]-j.pos_vec[i]
                 r = np.linalg.norm(r_vec)
-                l = np.cross(r_vec,current.vel_vec[i-1])
-                acc -= r_vec*self.G*j.mass/(np.linalg.norm(r)**3)*(1+(3*l**2)/(r**2*9e16))
+                l = np.linalg.norm(np.cross(r_vec,current.vel_vec[i-1]))
+                acc -= r_vec*self.G*j.mass/(np.linalg.norm(r)**3)*(1+(3*l**2)/(r**2*3999262982.498912))
         return acc
 
-    #@jit
     def verlet(self):
         dt     = self.dt
         dt2    = dt**2

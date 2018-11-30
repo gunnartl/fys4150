@@ -63,7 +63,8 @@ class solve:
             i.make_vel_vec(N)
         for i in self.system:
             i.make_acc_vec(N,self.acceleration(i,0))
-    
+            
+            
     def acceleration(self,current,i):
         acc = np.zeros(3)
 
@@ -73,7 +74,7 @@ class solve:
                 acc -= r*self.G*j.mass/(np.linalg.norm(r)**3)
         return acc
 
-    #@jit
+    
     def verlet(self):
         dt     = self.dt
         dt2    = dt**2

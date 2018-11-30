@@ -95,27 +95,27 @@ if __name__ == "__main__":
     G = np.pi**2 * 4
 
         
-    Earth = body(EarthM, np.array([1,0,0]),np.array([0,np.sqrt(G)+2.603,0]))
+    Earth = body(EarthM, np.array([1,0,0]),np.array([0,np.sqrt(G),0]))
     
     print(np.sqrt((2/Earth.mass)*abs(Earth.potential_energy(np.array([Earth.p0])))))
     
     print(np.sqrt(G)+2.602)
     
-    året    = solve(Earth,1*365,1/365)
-    E_p,E_v = året.euler()
-    året    = solve(Earth,1000*365,1/365)
+    #året    = solve(Earth,1*365,1/)
+    #E_p,E_v = året.euler()
+    året    = solve(Earth,int(1e6),0.2e-5)
     v_p,v_v = året.verlet()
     vpot     = Earth.potential_energy(v_p)
     vkin     = Earth.kinetic_energy(v_v)
     vangmom  = Earth.angular_momentum(v_v,v_p)
-    Epot     = Earth.potential_energy(E_p)
-    Ekin     = Earth.kinetic_energy(E_v)
-    Eangmom  = Earth.angular_momentum(E_v,E_p)
+    #Epot     = Earth.potential_energy(E_p)
+    #Ekin     = Earth.kinetic_energy(E_v)
+    #Eangmom  = Earth.angular_momentum(E_v,E_p)
     
     print(np.mean(vpot+vkin))
 
     import matplotlib.pyplot as plt
-    plt.plot(E_p[:,0],E_p[:,1])
+    #plt.plot(E_p[:,0],E_p[:,1])
     plt.plot(v_p[:,0],v_p[:,1])
     plt.scatter(0,0,color="y")
     #plt.plot(vpot-np.mean(vpot))

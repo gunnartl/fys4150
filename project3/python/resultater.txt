@@ -16,10 +16,40 @@ sett Kinetisk energi = potensiell og løs for
 	0.5mv^2      = G*M*m/r
 		v    = 8.8857658 AU/yr
 
-Funnet ved prøving og feiling
+Funnet ved prøving og feiling:
 
 ligger i intervallet [8.85185,8.886185 AU/yr]
 som må sies å stemme ganske bra. 
 
 grunnentil at jegikke har gort intervallet midre er at manmå simulere i 30000 år for 
 gjøre det mindre
+
+Unnslipningshastigheten blir lavere når man nermer seg tre i eksponenten. Dette er jo fordi graften blir mindre, i alle fall når man 
+er lengre unna. 
+
+Kommentarer og sånn : 
+
+3e
+Modeleringene  er gjort over 12 år med unntak av den der jupiter er 1000 ganger sin egen masse som er 20 år.
+
+Alle løsningene er stabile. Med jupiter og 10*jupiter drar den en del i banen til jorda, men den holder seg fortsatt
+innafor noen grenser.
+
+med jupiter *1000 blir det fult kaos og jorda stikker av. Jorda kommer veldig nærme jupiter og får sykjt høy hastighet og stikker av
+
+mer eller mindre samme resultater med ekte threebody, de små forskjellene som er kommer av at sola også beveger seg i elipsebaner det er fortsatt et stabilt system uten jupiter 
+ og med jupiter og 10* jupiter. 
+
+ustabilt med 1000 * jupiter dette også.
+
+den største forskjellen er at med en bevegelig sol så er det en del vingling i banen til jorda til og med uten jupiter.
+
+
+3f
+
+dt = 1/1e7 år =  10 mill tidssteg i året
+og N = 1e9 en mrd
+
+resultatet stemmer veldig bra overens med forventningene. de små fluktuasjonene skyldes at "den sanne" perihelene ligger mellom to tidssteg,
+så våre diskrete periheler treffer bittelitt forran eller bittelitt bak, som fører til flutuasjoner, men det er jo en klar trend, og den ender 
+på 43.36  buesekunder etter 100 år. 
