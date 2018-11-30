@@ -81,7 +81,7 @@ class solve:
             vel[i+1] = vel[i] + 0.5*(acc[i]+acc[i+1])*dt
         stop = time.time()
         print("Verlet : ",stop-start,"secs")
-        return pos,vel
+        return pos,vel,acc
 
 
         
@@ -95,16 +95,16 @@ if __name__ == "__main__":
     G = np.pi**2 * 4
 
         
-    Earth = body(EarthM, np.array([1,0,0]),np.array([0,np.sqrt(G),0]))
+    Earth = body(EarthM, np.array([1.,0,0]),np.array([0,np.sqrt(G),0]))
     
     print(np.sqrt((2/Earth.mass)*abs(Earth.potential_energy(np.array([Earth.p0])))))
     
     print(np.sqrt(G)+2.602)
     
-    #året    = solve(Earth,1*365,1/)
-    #E_p,E_v = året.euler()
-    året    = solve(Earth,int(1e6),0.2e-5)
-    v_p,v_v = året.verlet()
+    året    = solve(Earth,2000000,1e-5)
+    E_p,E_v = året.euler()
+    året    = solve(Earth,int(365),1/365)
+    v_p,v_v,acc = året.verlet()
     vpot     = Earth.potential_energy(v_p)
     vkin     = Earth.kinetic_energy(v_v)
     vangmom  = Earth.angular_momentum(v_v,v_p)
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     print(np.mean(vpot+vkin))
 
     import matplotlib.pyplot as plt
-    #plt.plot(E_p[:,0],E_p[:,1])
+    plt.plot(E_p[:,0],E_p[:,1])
     plt.plot(v_p[:,0],v_p[:,1])
     plt.scatter(0,0,color="y")
     #plt.plot(vpot-np.mean(vpot))

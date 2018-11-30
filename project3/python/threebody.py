@@ -62,6 +62,7 @@ system  = mpc.system(sun,mercur,earth,jupiter,saturn,venus,mars,pluto,uranus,nep
 
 #system   = mpc.system(sun,mercur)#,earth)
 
+system  = mpc.system(sun,earth,jupiter)
 
 
 
