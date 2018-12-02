@@ -40,15 +40,24 @@ class SIR_simple:
         return S,I
 
 
-
-
-test = SIR_simple(400,300,100,4,1,0.5)
-
-S, I = a.solve(1400,0.01)
-   
 import matplotlib.pyplot as plt
-
-plt.plot(S)
-plt.plot(I)
-plt.plot(S+I)
-#plt.show()
+b = [1,2,3,4]
+t = np.linspace(0,2000*0.01,2000)
+for i in range(len(b)):
+    test = SIR_simple(400,300,100,4,b[i],0.5)
+    S, I = test.solve(2000,0.01)
+    plt.subplot(2,2,i+1)
+    plt.grid()
+    plt.title("b = %i"%b[i])
+    plt.plot(t,S)
+    plt.plot(t,I)
+    plt.plot(t,400-I-S)
+   
+    if i == 2 or i ==3:
+         plt.xlabel("Time")
+    if i == 0 or i==2:
+        plt.ylabel("# of people")
+    if i == 3:
+        plt.legend(["S","I","R"])
+        
+plt.show()

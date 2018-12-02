@@ -5,13 +5,19 @@ import time
 
 class mc_SIR:
     def __init__(self, population_size, S0, I0,a,b,c,d=0,e=0,d_I=0,R0=0):
-        self.a, self.b,self.c, self.ps = a,b,c,population_size
+        self.b,self.c, self.ps = b,c,population_size
         self.e,self.d,self.d_I = e,d,d_I
         self.S0, self.I0,self.R0 = S0, I0,R0
         
-        self.dt= min(4/(a*self.ps),1/(b*self.ps),1/(c*self.ps))
-    
+        if type(a) == int or float:
+            self.a = np.ones(steps)*a
+        else:
+            self.a = a
+        
 
+        self.dt= min(min(4/(self.a*self.ps)),1/(b*self.ps),1/(c*self.ps))
+        
+        
     def propagate(self, steps):
         S = np.zeros(steps)
         S[0] = self.S0
@@ -26,7 +32,7 @@ class mc_SIR:
             r = 0
             s = 0
             #S to I
-            if np.random.random()< self.a*S[j]*I[j]*self.dt/self.ps:
+            if np.random.random()< self.a[j]*S[j]*I[j]*self.dt/self.ps:
                 i+=1
                 s-=1
                 
@@ -39,15 +45,15 @@ class mc_SIR:
                 s += 1
                 r -= 1
                         
-            S[j+1] = S[j] + s - self.d*S[i-1]+ e*self.ps
-            R[j+1] = R[j] + r - (self.d)*R[i-1]
+            S[j+1] = S[j] + s - self.d*S[i-1]+ self.e*self.ps-f[j]
+            R[j+1] = R[j] + r - (self.d)*R[i-1]+f[j]
             I[j+1] = I[j] + i - (self.d+self.d_I)*I[i-1]
         
         return S,I,R
     
     
 if __name__ == "__main__":
-    steps = 5600
+    steps = 9000
     
     sav = np.zeros(steps)
     iav = np.zeros(steps)
@@ -58,16 +64,17 @@ if __name__ == "__main__":
     I0 = 100
     R0 = 0
     
-    a   = 4 #infecsiousness
+    a   = 4 + np.sin(np.linspace(0,np.pi,steps)*4)*4#infecsiousness
     b   = 1
     c   = 0.5
     d   = 0.00001 #death rate
     e   = 0.000014 # birth rate
+    f   = np.linspace(0,.01,steps) + np.sin(np.linspace(0,np.pi,steps)*4)*.008
     d_I = 0.0003 # death rate of infected
     
     test = mc_SIR(pop_size,S0,I0,a,b,c,d,e,d_I,R0)
     start = time.time()
-    mcs = 1
+    mcs = 20
     for i in range(mcs):
         S,I,R = test.propagate(steps) 
         sav += S
