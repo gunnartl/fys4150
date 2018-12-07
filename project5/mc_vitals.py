@@ -39,7 +39,7 @@ class mc_SIR:
                 s += 1
                 r -= 1
                         
-            S[j+1] = S[j] + s - self.d*S[i-1]+ e*self.ps
+            S[j+1] = S[j] + s - self.d*S[i-1]+ self.e*self.ps
             R[j+1] = R[j] + r - (self.d)*R[i-1]
             I[j+1] = I[j] + i - (self.d+self.d_I)*I[i-1]
         
@@ -47,7 +47,7 @@ class mc_SIR:
     
     
 if __name__ == "__main__":
-    steps = 5600
+    steps = 100000
     
     sav = np.zeros(steps)
     iav = np.zeros(steps)
@@ -59,15 +59,15 @@ if __name__ == "__main__":
     R0 = 0
     
     a   = 4 #infecsiousness
-    b   = 1
+    b   = 3
     c   = 0.5
-    d   = 0.00001 #death rate
-    e   = 0.000014 # birth rate
-    d_I = 0.0003 # death rate of infected
+    #d   = 0.00001 #death rate
+    #e   = 0.000014 # birth rate
+    #d_I = 0.0003 # death rate of infected
     
-    test = mc_SIR(pop_size,S0,I0,a,b,c,d,e,d_I,R0)
+    test = mc_SIR(pop_size,S0,I0,a,b,c)#,d,e,d_I,R0)
     start = time.time()
-    mcs = 1
+    mcs = 100
     for i in range(mcs):
         S,I,R = test.propagate(steps) 
         sav += S
@@ -77,7 +77,14 @@ if __name__ == "__main__":
             
             
     import matplotlib.pyplot as plt 
-    plt.plot(sav/mcs)
-    plt.plot(iav/mcs)
-    plt.plot(rav/mcs)
-    plt.plot(S+I+R)
+    plt.plot(np.linspace(0,100,steps),sav/mcs)
+    plt.plot(np.linspace(0,100,steps),iav/mcs)
+    plt.plot(np.linspace(0,100,steps),rav/mcs)
+
+    plt.xlabel("Time",fontsize=13)
+
+    plt.ylabel("# of people",fontsize=13)
+
+    plt.legend(["S","I","R"],fontsize=13)
+    plt.grid()
+    plt.show()

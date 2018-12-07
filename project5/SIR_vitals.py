@@ -7,7 +7,7 @@ class SIR_vitals:
         self.S0, self.I0,self.R0 = S0, I0,R0
         
     def S_d(self,S,I,R):
-        return self.c*(R) - self.a*S*I/self.ps
+        return self.c*(R) - self.a*S*I/self.ps + self.e
 
     def I_d(self,S,I):
         return self.a*S*I/self.ps -self.b*I

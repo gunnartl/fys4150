@@ -1,28 +1,35 @@
 import numpy as np
 
-class SIR_vitals:
+class SIRS:
+    """
+    SIRS-model with birt, and death rates, cycles of infection-pressure and vacsinations
+    """
     def __init__(self, population_size, S0, I0,a,b,c,d=0,e=0,f=0,d_i=0,R0=0):
-        self.b,self.c, self.ps = b,c,population_size
+        self.a,self.b,self.c, self.ps = a,b,c,population_size
         self.d,self.e,self.f,self.d_i   = d,e,f,d_i
-        self.S0, self.I0,self.R0 = S0, I0,R0
+        self.S0, self.I0,self.R0 = S0, I0, R0    
         
-        if type(a) == (int or float):
-            self.a = np.ones(steps)*a
-        else:
-            self.a = a
         
     def S_d(self,S,I,R,a,f):
-        return self.c*(R) - a*S*I/self.ps -f
+        return self.c*(R) - a*S*I/self.ps -f + self.e*self.ps - self.d*S
 
     def I_d(self,S,I,a):
-        return a*S*I/self.ps -self.b*I
+        return a*S*I/self.ps -self.b*I - self.d*I - self.d_i*I
     
     def R_d(self,S,I,R,f):
-        return self.b*I-self.c*R-self.d*R +f
+        return self.b*I-self.c*R +f -self.d*R
     
     
     def solve(self,steps,dt):
+        
+        if type(self.a) == int or type(self.a) ==float: #if a is a constant sets it to an arrray, for generalized code
+            self.a = np.ones(steps)*self.a
+        
+        if type(self.f) == int or type(self.f) == float: # same with f
+            self.f = np.ones(steps)*self.f
+        
         S = np.zeros(steps)
+
         S[0] = self.S0
         I = np.zeros(steps)
         I[0] = self.I0
@@ -50,38 +57,41 @@ class SIR_vitals:
             S[i] = S[i-1] + (dt/6)*(sk1 + 2*sk2 + 2*sk3 + sk4)
             I[i] = I[i-1] + (dt/6)*(ik1 + 2*ik2 + 2*ik3 + ik4)
             R[i] = R[i-1] + (dt/6)*(rk1 + 2*rk2 + 2*rk3 + rk4)
+            self.ps = S[i]+R[i]+I[i]
             
         return S,I,R
 
 if __name__ == "__main__":
     # steps 7000, og a = 8 + np.sin(np.linspace(0,np.pi,steps)*4)*8 it sjuk graf
-    steps = 10000
+    steps = 40000
     N = 400
-    dt  = .01
-    a   = 4 + np.sin(np.linspace(0,np.pi,steps)*4)*1
-    b   = 1
-    c   = .5
-    d   = 0.0
-    d_i = 0.
-    e   = 0.0
-    x   = np.linspace(0,1,steps)
-    f   = np.piecewise(x,[x<0.1,x>=0.1],[0,150])
-    
+    dt  = .001
+    a   = 4 #+ np.sin(np.linspace(0,np.pi,steps)*4)*8
+    b   = 1      #
+    c   = .5     # 
+    d   = 0.03
+    d_i = .7
+    e   = 0.04
+    x   = np.linspace(0,steps,steps)
+    f   = 0#np.piecewise(x,[x<100,x>=100],[x[:100],100]) + np.sin(x*np.pi/2000)*50
+    time = np.linspace(0,steps*dt,steps)
 
     
     S0 = 300
     I0 = 100
     R0 = 0
     
-    start = SIR_vitals(N,S0,I0,a,b,c,d,e,f,d_i,R0)
+    start = SIRS(N,S0,I0,a,b,c,d,e,f,d_i,R0)
     
     S,I,R = start.solve(steps,dt)
     
-        
+    #%%    
     import matplotlib.pyplot as plt
     
-    plt.plot(S)
-    plt.plot(I)
-    plt.plot(R)
-    plt.plot(S+I+R)
+    plt.plot(time,S)
+    plt.plot(time,I)
+    plt.plot(time,R)
+    plt.plot(time,S+I+R)
+
+    plt.grid()
     plt.show()

@@ -64,7 +64,7 @@ if __name__ == "__main__":
     I0 = 100
     R0 = 0
     
-    a   = 8 + np.sin(np.linspace(0,np.pi,steps)*4)*8 #infecsiousness
+    a   = 4 + np.sin(np.linspace(0,np.pi,steps)*4)*8 #infecsiousness
     b   = 1
     c   = 0.5
     d   = 0.00001 #death rate
