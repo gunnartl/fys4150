@@ -63,7 +63,7 @@ class SIRS:
 
 if __name__ == "__main__":
     # steps 7000, og a = 8 + np.sin(np.linspace(0,np.pi,steps)*4)*8 it sjuk graf
-    steps = 40000
+    steps = 21000
     N = 400
     dt  = .001
     a   = 4 #+ np.sin(np.linspace(0,np.pi,steps)*4)*8
@@ -72,6 +72,15 @@ if __name__ == "__main__":
     d   = 0.03
     d_i = .7
     e   = 0.04
+    
+    #a   = 4  #+ np.sin(np.linspace(0,2*np.pi,steps))*2#+ np.sin(np.linspace(0,np.pi,steps)*4)*4#infecsiousness
+    #b   = 1
+    #c   = .5
+    ##d   = 0.03 #death rate
+    #e   = 0.04 # birth rate
+    #f   = 0#np.linspace(0,.01,steps) + np.sin(np.linspace(0,np.pi,steps)*4)*.008
+    #d_I = .1 # death rate of infected
+    
     x   = np.linspace(0,steps,steps)
     f   = 0#np.piecewise(x,[x<100,x>=100],[x[:100],100]) + np.sin(x*np.pi/2000)*50
     time = np.linspace(0,steps*dt,steps)

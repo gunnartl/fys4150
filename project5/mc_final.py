@@ -20,21 +20,23 @@ class mc_SIR:
         if type(self.f) == int or type(self.f) == float: # same with f
             self.f = np.ones(steps)*self.f
         
-        self.dt= min(min(4/(self.a*self.ps)),1/(self.b*self.ps),1/(c*self.ps))
+        self.dt= np.min([np.min(4/(self.a*self.ps)),1/(self.b*self.ps),1/(c*self.ps)])
 
-        time = np.linspace(0,steps*self.dt,steps)
+        time = np.zeros(steps)
         S = np.zeros(steps)
         S[0] = self.S0
         I = np.zeros(steps)
         I[0] = self.I0
         R = np.zeros(steps)
         R[0] = self.R0
-        rands = np.random.random((steps,3)) # eliminates multiple calls to random.random
+        rands = np.random.random((steps,7)) # eliminates multiple calls to random.random
         
         for j in range(steps-1):
+            self.dt= np.min([np.min(4/(self.a*self.ps)),1/(self.b*self.ps),1/(c*self.ps)])
             i = 0
             r = 0
             s = 0
+            
             #S to I
             if rands[j,0]< self.a[j]*S[j]*I[j]*self.dt/self.ps:
                 i+=1
@@ -44,24 +46,34 @@ class mc_SIR:
             if rands[j,1]< self.b*I[j]*self.dt:
                 r += 1
                 i -= 1
-                    
+            
+            # R to S
             if rands[j,2]< self.c*R[j]*self.dt:
                 s += 1
                 r -= 1
-                        
-            S[j+1] = S[j] + s + (-self.d*S[j]+ self.e*self.ps-self.f[j])*self.dt
-            R[j+1] = R[j] + r + (-(self.d)*R[j]+self.f[j])*self.dt
-            I[j+1] = I[j] + i + (-(self.d+self.d_I)*I[j])*self.dt
+            
+            # birth in whole population
+            if rands[j,3] < (self.e*self.ps)*self.dt:
+                s += 1
+            
+            # death in S
+            if rands[j,4] < (self.d*S[j])*self.dt:
+                s -= 1
+            
+            #death in R    
+            if rands[j,5] < (self.d*R[j])*self.dt:
+                r -= 1
+            
+            #death in I
+            if rands[j,6] < ((self.d+self.d_I)*I[j])*self.dt:
+                i -= 1
             
             
-            #if S[j+1]<0:      
-            #   S[j+1] = 0     
+            S[j+1]    = S[j] + s -self.f[j]
+            R[j+1]    = R[j] + r +self.f[j]
+            I[j+1]    = I[j] + i 
+            time[j+1] = time[j] + self.dt
             
-            #if I[j+1]<0:      
-            #   I[j+1] = 0
-               
-            #if R[j+1]<0:      
-            #   R[j+1] = 0
             
             self.ps = S[j+1] +I[j+1]+R[j+1] # update population size
             
@@ -69,7 +81,7 @@ class mc_SIR:
     
     
 if __name__ == "__main__":
-    steps = 14000
+    steps = 2700
     
 
     
@@ -84,21 +96,23 @@ if __name__ == "__main__":
     d   = 0.03 #death rate
     e   = 0.04 # birth rate
     f   = 0#np.linspace(0,.01,steps) + np.sin(np.linspace(0,np.pi,steps)*4)*.008
-    d_I = .1 # death rate of infected
+    d_I = .7 # death rate of infected
     #file = open("outdata.txt","w")
     #file.write("b S ssd i isd r rsd \n")
     for j in b:
         sav = np.zeros(steps)
         iav = np.zeros(steps)
         rav = np.zeros(steps)
+        tav = np.zeros(steps)
         population = mc_SIR(pop_size,S0,I0,a,j,c,d,e,f,d_I,R0)
         start = t.time()
-        mcs = 10
+        mcs = 12
         for i in range(mcs):
             S,I,R,time = population.propagate(steps) 
             sav += S
             iav += I
             rav += R
+            tav += time
         print(t.time()-start)
         
         #start = 50000
@@ -114,10 +128,10 @@ if __name__ == "__main__":
         #file.write("%i %.2f %.2f %.2f %.2f %.2f %.2f \n" %(j,sexp,ssd,iexp,isd,rexp,rsd))    
     #file.close()
     import matplotlib.pyplot as plt 
-    plt.plot(time,sav/mcs)
-    plt.plot(time,iav/mcs)
-    plt.plot(time,rav/mcs)
-    plt.plot(time,(rav+sav+iav)/mcs)
+    plt.plot(tav/mcs,sav/mcs)
+    plt.plot(tav/mcs,iav/mcs)
+    plt.plot(tav/mcs,rav/mcs)
+    plt.plot(tav/mcs,(rav+sav+iav)/mcs)
     plt.grid()
     plt.ylabel("# of people")
     plt.xlabel("Time")
