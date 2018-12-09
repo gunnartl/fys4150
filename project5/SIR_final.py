@@ -57,20 +57,21 @@ class SIRS:
             S[i] = S[i-1] + (dt/6)*(sk1 + 2*sk2 + 2*sk3 + sk4)
             I[i] = I[i-1] + (dt/6)*(ik1 + 2*ik2 + 2*ik3 + ik4)
             R[i] = R[i-1] + (dt/6)*(rk1 + 2*rk2 + 2*rk3 + rk4)
-            self.ps = S[i]+R[i]+I[i]
+            
+            self.ps = S[i]+R[i]+I[i] # update size of population
             
         return S,I,R
 
 if __name__ == "__main__":
     # steps 7000, og a = 8 + np.sin(np.linspace(0,np.pi,steps)*4)*8 it sjuk graf
-    steps = 21000
+    steps = 50000
     N = 400
     dt  = .001
-    a   = 4 #+ np.sin(np.linspace(0,np.pi,steps)*4)*8
+    a   = 3 + np.sin(np.linspace(0,np.pi,steps)*6.5)*2
     b   = 1      #
     c   = .5     # 
     d   = 0.03
-    d_i = .7
+    d_i = .03
     e   = 0.04
     
     #a   = 4  #+ np.sin(np.linspace(0,2*np.pi,steps))*2#+ np.sin(np.linspace(0,np.pi,steps)*4)*4#infecsiousness
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     #d_I = .1 # death rate of infected
     
     x   = np.linspace(0,steps,steps)
-    f   = 0#np.piecewise(x,[x<100,x>=100],[x[:100],100]) + np.sin(x*np.pi/2000)*50
+    f   = np.piecewise(x,[x<18000,x>=18000],[0,200])# + np.sin(x*np.pi/2000)*50
     time = np.linspace(0,steps*dt,steps)
 
     

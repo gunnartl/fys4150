@@ -29,10 +29,10 @@ class mc_SIR:
         I[0] = self.I0
         R = np.zeros(steps)
         R[0] = self.R0
-        rands = np.random.random((steps,7)) # eliminates multiple calls to random.random
+        rands = np.random.random((steps,8)) # eliminates multiple calls to random.random
         
         for j in range(steps-1):
-            self.dt= np.min([np.min(4/(self.a*self.ps)),1/(self.b*self.ps),1/(c*self.ps)])
+            #self.dt= np.min([np.min(4/(self.a*self.ps)),1/(self.b*self.ps),1/(c*self.ps)])
             i = 0
             r = 0
             s = 0
@@ -67,10 +67,15 @@ class mc_SIR:
             #death in I
             if rands[j,6] < ((self.d+self.d_I)*I[j])*self.dt:
                 i -= 1
+           
+            ##vaccination 
+            if rands[j,7] < self.f[j]*self.ps*self.dt:
+              r += 1
+              s -= 1
             
             
-            S[j+1]    = S[j] + s -self.f[j]
-            R[j+1]    = R[j] + r +self.f[j]
+            S[j+1]    = S[j] + s #-self.f[j]*self.dt
+            R[j+1]    = R[j] + r #+self.f[j]*self.dt
             I[j+1]    = I[j] + i 
             time[j+1] = time[j] + self.dt
             
@@ -81,7 +86,7 @@ class mc_SIR:
     
     
 if __name__ == "__main__":
-    steps = 2700
+    steps = 50000
     
 
     
@@ -90,13 +95,16 @@ if __name__ == "__main__":
     I0 = 100
     R0 = 0
     
-    a   = 4  #+ np.sin(np.linspace(0,2*np.pi,steps))*2#+ np.sin(np.linspace(0,np.pi,steps)*4)*4#infecsiousness
+    a   = 3 + np.sin(np.linspace(0,np.pi,steps)*6.5)*2#+ np.sin(np.linspace(0,np.pi,steps)*4)*4#infecsiousness
     b   = [1]
-    c   = .5
+    c   = 0.5
     d   = 0.03 #death rate
     e   = 0.04 # birth rate
-    f   = 0#np.linspace(0,.01,steps) + np.sin(np.linspace(0,np.pi,steps)*4)*.008
-    d_I = .7 # death rate of infected
+    
+    #x   = #np.linspace(0,steps,steps)
+    f   = 0.15 + np.sin(np.linspace(0,np.pi,steps)*6.5)*0.15#np.piecewise(x,[x<5000,x>=5000],[0,0.4])
+    
+    d_I = .03 # death rate of infected
     #file = open("outdata.txt","w")
     #file.write("b S ssd i isd r rsd \n")
     for j in b:
@@ -106,7 +114,7 @@ if __name__ == "__main__":
         tav = np.zeros(steps)
         population = mc_SIR(pop_size,S0,I0,a,j,c,d,e,f,d_I,R0)
         start = t.time()
-        mcs = 12
+        mcs = 10
         for i in range(mcs):
             S,I,R,time = population.propagate(steps) 
             sav += S
@@ -127,6 +135,7 @@ if __name__ == "__main__":
         #rsd = np.sqrt(np.var(rav[start:]))/np.sqrt(mcs)
         #file.write("%i %.2f %.2f %.2f %.2f %.2f %.2f \n" %(j,sexp,ssd,iexp,isd,rexp,rsd))    
     #file.close()
+    #%%
     import matplotlib.pyplot as plt 
     plt.plot(tav/mcs,sav/mcs)
     plt.plot(tav/mcs,iav/mcs)
