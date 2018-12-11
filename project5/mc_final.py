@@ -86,7 +86,7 @@ class mc_SIR:
     
     
 if __name__ == "__main__":
-    steps = 50000
+    steps = 20000
     
 
     
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     e   = 0.04 # birth rate
     
     #x   = #np.linspace(0,steps,steps)
-    f   = 0.15 + np.sin(np.linspace(0,np.pi,steps)*6.5)*0.15#np.piecewise(x,[x<5000,x>=5000],[0,0.4])
+    f   = 0.3+ np.sin(np.linspace(0,np.pi,steps)*6.5)*0.2#np.piecewise(x,[x<5000,x>=5000],[0,0.4])
     
     d_I = .03 # death rate of infected
     #file = open("outdata.txt","w")
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         tav = np.zeros(steps)
         population = mc_SIR(pop_size,S0,I0,a,j,c,d,e,f,d_I,R0)
         start = t.time()
-        mcs = 10
+        mcs = 100
         for i in range(mcs):
             S,I,R,time = population.propagate(steps) 
             sav += S

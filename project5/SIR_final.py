@@ -11,13 +11,13 @@ class SIRS:
         
         
     def S_d(self,S,I,R,a,f):
-        return self.c*(R) - a*S*I/self.ps -f + self.e*self.ps - self.d*S
+        return self.c*(R) - a*S*I/self.ps -f*self.ps + self.e*self.ps - self.d*S
 
     def I_d(self,S,I,a):
         return a*S*I/self.ps -self.b*I - self.d*I - self.d_i*I
     
     def R_d(self,S,I,R,f):
-        return self.b*I-self.c*R +f -self.d*R
+        return self.b*I-self.c*R +f*self.ps -self.d*R
     
     
     def solve(self,steps,dt):
@@ -64,7 +64,7 @@ class SIRS:
 
 if __name__ == "__main__":
     # steps 7000, og a = 8 + np.sin(np.linspace(0,np.pi,steps)*4)*8 it sjuk graf
-    steps = 50000
+    steps = 40000
     N = 400
     dt  = .001
     a   = 3 + np.sin(np.linspace(0,np.pi,steps)*6.5)*2
@@ -73,17 +73,10 @@ if __name__ == "__main__":
     d   = 0.03
     d_i = .03
     e   = 0.04
+
     
-    #a   = 4  #+ np.sin(np.linspace(0,2*np.pi,steps))*2#+ np.sin(np.linspace(0,np.pi,steps)*4)*4#infecsiousness
-    #b   = 1
-    #c   = .5
-    ##d   = 0.03 #death rate
-    #e   = 0.04 # birth rate
-    #f   = 0#np.linspace(0,.01,steps) + np.sin(np.linspace(0,np.pi,steps)*4)*.008
-    #d_I = .1 # death rate of infected
+    f   = 0.3 + np.sin(np.linspace(0,np.pi,steps)*6.5)*0.2
     
-    x   = np.linspace(0,steps,steps)
-    f   = np.piecewise(x,[x<18000,x>=18000],[0,200])# + np.sin(x*np.pi/2000)*50
     time = np.linspace(0,steps*dt,steps)
 
     
