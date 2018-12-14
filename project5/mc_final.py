@@ -114,7 +114,7 @@ if __name__ == "__main__":
         tav = np.zeros(steps)
         population = mc_SIR(pop_size,S0,I0,a,j,c,d,e,f,d_I,R0)
         start = t.time()
-        mcs = 100
+        mcs = 1
         for i in range(mcs):
             S,I,R,time = population.propagate(steps) 
             sav += S
