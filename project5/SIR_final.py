@@ -2,24 +2,31 @@ import numpy as np
 
 class SIRS:
     """
-    SIRS-model with birt, and death rates, cycles of infection-pressure and vacsinations
+    SIRS-model with RK4 solver
+    a = infection pressure
+    b = recovery rate
+    c = imunity loss rate
+    d = death reate in population
+    e = birth rate of population
+    f = vacination rate of population
+    d_i = increaseed death rate of infected individuals
     """
     def __init__(self, population_size, S0, I0,a,b,c,d=0,e=0,f=0,d_i=0,R0=0):
         self.a,self.b,self.c, self.ps = a,b,c,population_size
         self.d,self.e,self.f,self.d_i   = d,e,f,d_i
         self.S0, self.I0,self.R0 = S0, I0, R0    
         
-        
+    # S derivert    
     def S_d(self,S,I,R,a,f):
         return self.c*(R) - a*S*I/self.ps -f*self.ps + self.e*self.ps - self.d*S
-
+    # I derivert
     def I_d(self,S,I,a):
         return a*S*I/self.ps -self.b*I - self.d*I - self.d_i*I
-    
+    #R derivert
     def R_d(self,S,I,R,f):
         return self.b*I-self.c*R +f*self.ps -self.d*R
     
-    
+    # RK4
     def solve(self,steps,dt):
         
         if type(self.a) == int or type(self.a) ==float: #if a is a constant sets it to an arrray, for generalized code
