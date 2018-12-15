@@ -4,6 +4,16 @@ import time as t
 
 
 class mc_SIR:
+    """
+    SIRS-model with stochastic progression
+    a = infection pressure
+    b = recovery rate
+    c = imunity loss rate
+    d = death reate in population
+    e = birth rate of population
+    f = vacination rate of population
+    d_i = increaseed death rate of infected individuals
+    """
     def __init__(self, population_size, S0, I0,a,b,c,d=0,e=0,f=0,d_I=0,R0=0):
         self.a,self.b,self.c, self.ps = a,b,c,population_size
         self.f,self.e,self.d,self.d_I = f,e,d,d_I
